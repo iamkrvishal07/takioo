@@ -23,7 +23,7 @@ socketApp.use(express.json());
 socketApp.use(cookieParser());
 socketApp.use(
   cors({
-    origin: "http://localhost:5173", // for local dev
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -34,14 +34,28 @@ socketApp.use("/api/messages", messageRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "../../frontend/dist");
+  socketApp.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  socketApp.use(express.static(distPath));
+  // socketApp.get("/*", (req, res) => {
+  //   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  // });
 
-  socketApp.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
-  });
+  socketApp.get(/(.*)/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+});
 }
+
+
+
+// ✅ go up two levels from /backend/src to reach frontend/dist
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+
+app.get(/(.*)/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+});
+
+
+
 
 // Start server
 server.listen(PORT, async () => {
