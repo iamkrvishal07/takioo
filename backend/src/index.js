@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === "production") {
 
   socketApp.use(express.static(distPath));
 
-  socketApp.get("/*", (req, res) => {
+  socketApp.get("*", (req, res) => {
     res.sendFile(path.join(distPath, "index.html"));
   });
 }
