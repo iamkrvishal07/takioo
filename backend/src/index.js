@@ -34,26 +34,14 @@ socketApp.use("/api/messages", messageRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  socketApp.use(express.static(path.join(__dirname, "../frontend/dist")));
+  // socketApp.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  // socketApp.get("/*", (req, res) => {
-  //   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-  // });
+  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
-  socketApp.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
-}
-
-
-
-// ✅ go up two levels from /backend/src to reach frontend/dist
-app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-
-app.get(/(.*)/, (req, res) => {
+  app.get(/(.*)/, (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
-
+}
 
 
 
