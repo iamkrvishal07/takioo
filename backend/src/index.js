@@ -23,7 +23,7 @@ socketApp.use(express.json());
 socketApp.use(cookieParser());
 socketApp.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173", // for local dev
     credentials: true,
   })
 );
@@ -34,15 +34,13 @@ socketApp.use("/api/messages", messageRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  socketApp.use(express.static(path.join(__dirname, "../frontend/dist")));
+  const distPath = path.join(__dirname, "../../frontend/dist");
 
-  // socketApp.get("/*", (req, res) => {
-  //   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-  // });
+  socketApp.use(express.static(distPath));
 
-  socketApp.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
+  socketApp.get("/*", (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
 }
 
 // Start server
